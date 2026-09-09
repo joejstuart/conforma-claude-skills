@@ -9,7 +9,7 @@ Assess one Jira story for implementation readiness, let the user review the
 assessment, and—with explicit confirmation—post it to Jira and apply a
 readiness label.
 
-Read `.claude/commands/sprint-triage-reference.md` before assessing the story.
+Read `.claude/references/sprint-triage-reference.md` before assessing the story.
 Use its information-availability framework, ambiguity words, scope signals,
 and dependency heuristics. Adapt those signals into actionable suggestions for
 one story rather than producing a sprint triage report.

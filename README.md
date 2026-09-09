@@ -121,6 +121,8 @@ Core skill for investigating individual policy violations. Automatically invoked
 │   ├── groom.md                 # /groom command
 │   ├── mid-sprint-add.md        # /mid-sprint-add command
 │   └── sprint-report.md         # /sprint-report command
+├── references/
+│   └── sprint-triage-reference.md # Shared readiness-assessment heuristics
 ├── reports/                     # Generated sprint reports
 ├── skills/
 │   ├── ec-policy-debugging/
