@@ -7,6 +7,7 @@ Claude Code skills and commands for [Conforma](https://github.com/conforma/cli) 
 These tools help you:
 
 - Debug and resolve Conforma/EC validation failures
+- Assess Jira stories for implementation readiness before backlog grooming
 - Track mid-sprint story additions with structured tagging
 - Generate sprint reports surfacing unplanned work
 
@@ -26,6 +27,20 @@ cp -r claude-skills/.claude ~/
 ```
 
 ## Commands
+
+### `/groom`
+
+Assess one Jira story for implementation readiness and preview a structured
+Automated Grooming Review before posting it and applying a readiness label.
+
+```bash
+/groom EC-1234
+/groom EC-1234 --force  # Explicitly reassess a previously reviewed story
+```
+
+The command evaluates clarity, testability, information completeness,
+dependencies, and scope. It requires Jira MCP capabilities for reading issues
+and comments, posting comments, and updating labels.
 
 ### `/ec-setup`
 
@@ -103,8 +118,11 @@ Core skill for investigating individual policy violations. Automatically invoked
 ├── commands/
 │   ├── ec-setup.md              # /ec-setup command
 │   ├── ec-debug-violations.md   # /ec-debug-violations command
+│   ├── groom.md                 # /groom command
 │   ├── mid-sprint-add.md        # /mid-sprint-add command
 │   └── sprint-report.md         # /sprint-report command
+├── references/
+│   └── sprint-triage-reference.md # Shared readiness-assessment heuristics
 ├── reports/                     # Generated sprint reports
 ├── skills/
 │   ├── ec-policy-debugging/
