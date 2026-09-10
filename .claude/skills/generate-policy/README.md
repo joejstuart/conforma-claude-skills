@@ -24,6 +24,9 @@ Or use the slash command:
 | Validation requirements | Yes | "Ensure packages come from approved sources" |
 | Image reference | Yes | `quay.io/org/app@sha256:abc123...` |
 | Public key file | Optional | `cosign.pub` |
+| Builder IDs | For SLSA provenance rules | `["https://tekton.dev/chains/v2"]` |
+| Source repository | For SLSA provenance correlation | `https://github.com/org/repo` |
+| Build type | For SLSA provenance rules | `"tekton.dev/v1/PipelineRun"` |
 
 The skill will prompt you for any missing information.
 
@@ -37,6 +40,18 @@ The skill will prompt you for any missing information.
 | Rule data | `<policy_set>/data/*.yaml` | Configuration data for rules |
 | Public key | `<policy_set>/cosign.pub` | Public key for signature verification |
 | Conforma command | (displayed) | Ready-to-run validation command |
+
+### Policy Domains
+
+The skill supports two complementary policy domains:
+
+- **SBOM composition** — validates what is inside the image, such as packages,
+  components, registries, and licenses. SBOM rules use the local SBOM access
+  library when they need to retrieve SBOM data.
+- **SLSA build provenance** — validates how the image was built, such as the
+  builder identity, source repository, and build type. Provenance rules use
+  Conforma's runtime `data.lib` helpers and do not require the local
+  `policy/lib/sbom.rego` library.
 
 ## Example Prompts
 
@@ -52,6 +67,13 @@ The skill will prompt you for any missing information.
 **License Compliance**
 - "Ensure all packages have declared licenses"
 - "Block packages with NOASSERTION license"
+
+**SLSA Provenance Validation**
+- "Ensure images are built by our approved Tekton pipeline"
+- "Validate SLSA provenance shows builds from authorized source repositories"
+- "Enforce builder ID matches our CI/CD system"
+
+For complete SLSA builder ID examples, see the [v0.2 PASS example](../../../examples/07-slsa-v02-builder-id-validation-pass.md), the [v1.0 FAIL example](../../../examples/08-slsa-v1-builder-id-validation-fail.md), and the [SLSA provenance structure reference](reference/slsa-provenance-structure.md).
 
 ## Generated Command
 
