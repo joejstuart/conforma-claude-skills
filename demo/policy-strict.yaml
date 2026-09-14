@@ -1,12 +1,17 @@
-name: registry_validation_strict
-description: Deliberately strict registry policy used to demonstrate debugging
+name: ec_golden_image_policy_strict
+description: Deliberately strict SBOM registry policy used to demonstrate debugging
 sources:
-  - name: approved-registries
+  - name: demo-policy
     data:
       - ./data-strict
     policy:
       - ./policy/lib
       - ./policy/approved_image_registries
+      - ./policy/approved_slsa_builder
     config:
       include:
         - "approved_image_registries.approved_image_registries"
+        - "approved_image_registries.spdx_sbom_found"
+        - "approved_slsa_builder.slsa_provenance_found"
+        - "approved_slsa_builder.slsa_builder_id_found"
+        - "approved_slsa_builder.slsa_builder_id_accepted"

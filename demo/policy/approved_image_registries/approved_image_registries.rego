@@ -13,6 +13,23 @@ import rego.v1
 import data.lib.sbom
 
 # METADATA
+# title: SPDX SBOM found
+# description: Verify that the image has at least one SPDX SBOM attestation.
+# custom:
+#   short_name: spdx_sbom_found
+#   failure_msg: "SPDX SBOM not found"
+#   solution: Generate and attach an SPDX SBOM before validating the image.
+deny contains result if {
+	count(sbom.spdx_sboms) == 0
+
+	result := {
+		"code": "approved_image_registries.spdx_sbom_found",
+		"msg": "SPDX SBOM not found",
+		"severity": "failure",
+	}
+}
+
+# METADATA
 # title: Approved image registries
 # description: >-
 #   Verify that OCI images referenced in SPDX packages come from approved
@@ -54,8 +71,14 @@ deny contains result if {
 	}
 }
 
-# Helper: check if repository_url starts with any approved registry
+# Match a registry host exactly or as the first path component. This avoids
+# treating a host such as quay.io.example.com as though it were quay.io.
 _registry_approved(repo_url, approved) if {
 	some registry in approved
-	startswith(repo_url, registry)
+	repo_url == registry
+}
+
+_registry_approved(repo_url, approved) if {
+	some registry in approved
+	startswith(repo_url, sprintf("%s/", [registry]))
 }

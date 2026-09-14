@@ -3,3 +3,9 @@ rule_data:
     - "registry.redhat.io"
     - "registry.access.redhat.com"
     - "quay.io"
+  allowed_builder_ids:
+    - "https://tekton.dev/chains/v2"
+  allowed_provenance_build_types:
+    - "tekton.dev/v1/PipelineRun"
+    - "tekton.dev/v1beta1/PipelineRun"
+    - "https://tekton.dev/chains/v2/slsa-tekton"

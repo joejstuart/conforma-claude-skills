@@ -56,8 +56,7 @@ test_approved_registry_redhat_io if {
 	packages := [_mock_oci_package("ubi9", "registry.redhat.io/ubi9")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 0 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -65,8 +64,7 @@ test_approved_registry_access_redhat if {
 	packages := [_mock_oci_package("ubi8", "registry.access.redhat.com/ubi8")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 0 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -77,8 +75,7 @@ test_multiple_approved_registries if {
 	]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 0 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -90,8 +87,7 @@ test_unapproved_registry_fails if {
 	packages := [_mock_oci_package("myapp", "quay.io/myorg/myapp")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 1
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 1 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -99,8 +95,7 @@ test_dockerhub_registry_fails if {
 	packages := [_mock_oci_package("nginx", "docker.io/library/nginx")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 1
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 1 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -108,8 +103,7 @@ test_empty_approved_registries_denies_all if {
 	packages := [_mock_oci_package("ubi9", "registry.redhat.io/ubi9")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 1
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 1 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as []
 }
 
@@ -118,16 +112,18 @@ test_empty_approved_registries_denies_all if {
 # =============================================================================
 
 test_no_sboms if {
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as []
+	result := approved_image_registries.deny with data.lib.sbom.spdx_sboms as []
 		with data.rule_data.approved_image_registries as _approved_registries
+
+	count(result) == 1
+	some violation in result
+	violation.code == "approved_image_registries.spdx_sbom_found"
 }
 
 test_no_packages if {
 	sboms := [_mock_spdx_sbom([])]
 
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 0 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -135,8 +131,7 @@ test_non_oci_purl_skipped if {
 	packages := [_mock_non_oci_package("pkg:rpm/rhel/openssl@3.0.7")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 0 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -152,8 +147,15 @@ test_package_without_purl_skipped if {
 	}]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 0
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 0 with data.lib.sbom.spdx_sboms as sboms
+		with data.rule_data.approved_image_registries as _approved_registries
+}
+
+test_registry_prefix_lookalike_fails if {
+	packages := [_mock_oci_package("myapp", "registry.redhat.io.example.com/myapp")]
+	sboms := [_mock_spdx_sbom(packages)]
+
+	count(approved_image_registries.deny) == 1 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -169,8 +171,7 @@ test_mixed_approved_and_unapproved if {
 	]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 1
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 1 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -181,8 +182,7 @@ test_multiple_unapproved if {
 	]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	count(approved_image_registries.deny) == 2
-		with data.lib.sbom.spdx_sboms as sboms
+	count(approved_image_registries.deny) == 2 with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 }
 
@@ -194,8 +194,7 @@ test_violation_contains_purl_and_registry if {
 	packages := [_mock_oci_package("myapp", "quay.io/myorg/myapp")]
 	sboms := [_mock_spdx_sbom(packages)]
 
-	result := approved_image_registries.deny
-		with data.lib.sbom.spdx_sboms as sboms
+	result := approved_image_registries.deny with data.lib.sbom.spdx_sboms as sboms
 		with data.rule_data.approved_image_registries as _approved_registries
 
 	count(result) == 1
