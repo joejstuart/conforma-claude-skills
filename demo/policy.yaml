@@ -1,0 +1,12 @@
+name: registry_validation
+description: Validates that container images come from approved registries
+sources:
+  - name: approved-registries
+    data:
+      - ./data
+    policy:
+      - ./policy/lib
+      - ./policy/approved_image_registries
+    config:
+      include:
+        - "approved_image_registries.approved_image_registries"

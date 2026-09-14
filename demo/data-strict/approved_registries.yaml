@@ -1,0 +1,4 @@
+rule_data:
+  approved_image_registries:
+    - "registry.redhat.io"
+    - "registry.access.redhat.com"

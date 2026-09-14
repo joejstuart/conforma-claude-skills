@@ -1,0 +1,12 @@
+name: registry_validation_strict
+description: Deliberately strict registry policy used to demonstrate debugging
+sources:
+  - name: approved-registries
+    data:
+      - ./data-strict
+    policy:
+      - ./policy/lib
+      - ./policy/approved_image_registries
+    config:
+      include:
+        - "approved_image_registries.approved_image_registries"
